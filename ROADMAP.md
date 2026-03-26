@@ -3,7 +3,7 @@
 ## Phase 1 — Hardware Assembly
 **Goal:** All physical components wired, powered, and verified independently before any firmware.
 
-- [ ] Purchase remaining components: 12V adapter, outdoor IP65 enclosure
+- [ ] Purchase remaining components: outdoor IP65 enclosure
 - [ ] Redesign 3D enclosure for CYD form factor (simple wall frame) once boards arrive
 - [ ] Send 3D enclosure to print x2 (master + kids bedroom)
 - [ ] Wire Station-485 with all Grove sensors (BH1750, SHT30, Earth Sensors x2)
@@ -18,6 +18,14 @@
   - [ ] Test TimerCam X WiFi connection and photo capture
   - [ ] Mount in outdoor enclosure with acryllic window facing planters
   - [ ] Confirm 5V USB power supply (from Station-485 enclosure or separate)
+
+### Security — Phase 1
+> Reference: `docs/security.md` sections 1.1, 1.3, 1.4, 14.3
+- [ ] Use IP65 enclosure with **Torx or hexalobe security screws** (not Phillips) — prevents casual tampering
+- [ ] Install **cable glands (PG7/PG9)** for every cable exiting the outdoor enclosure — mandatory for Orlando rain
+- [ ] Seal cable glands with neutral silicone after installation
+- [ ] 3D enclosure for CYD must **block access to EN (reset) button** — expose screen only
+- [ ] **Document MAC address of each ESP32** before installation → save to `hardware/inventory.md`
 
 ---
 
@@ -52,6 +60,19 @@
   - [ ] MQTT publish `sniperstation/camaras/sucufer/captura` after each shot
   - [ ] Deep sleep return after upload (~80µA sleep current)
 
+### Security — Phase 2
+> Reference: `docs/security.md` sections 6.6, 10.1, 10.2, 10.4, 10.5, 13.3, 14.4
+- [ ] **`secrets.h` must be in `.gitignore` before first firmware commit** — never hardcode WiFi/MQTT credentials in source
+  - Create `firmware/station485/secrets.h`, `firmware/cyd_indoor/secrets.h`, `firmware/timercam/secrets.h`
+  - Provide `secrets.h.example` with placeholder values for each
+- [ ] **Watchdog timer** in all ESP32 firmware (30s) — if loop hangs, device resets instead of leaving pump active
+- [ ] **Relay absolute max duration** hardcoded in firmware: force pump OFF after 60s regardless of MQTT commands
+- [ ] **Sanitize MQTT pump commands**: accept only `'1'`/`'0'`, length == 1, drop everything else silently
+- [ ] **LWT (Last Will and Testament)** configured on all devices: publish `offline` to `sniperstation/sistema/lwt` on unexpected disconnect
+- [ ] **Pump state persisted in NVS**: on reboot, if pump was active >2 minutes ago, force relay OFF before connecting to MQTT
+- [ ] **OTA with password** configured on all ESP32 — never leave OTA open
+- [ ] (Optional) Migrate credentials from `secrets.h` to NVS — allows changing credentials without reflashing
+
 ---
 
 ## Phase 3 — Software Stack (Proxmox LXC)
@@ -60,7 +81,7 @@
 - [ ] Provision LXC container (Debian 12)
 - [ ] Install and configure Mosquitto broker
 - [ ] Install and configure InfluxDB 2.x
-  - [ ] Create org, bucket `sucustation`, API token
+  - [ ] Create org, bucket `sniperstation`, API token
   - [ ] MQTT → InfluxDB bridge (Telegraf or custom Python script)
 - [ ] Install and configure Grafana
   - [ ] Connect InfluxDB data source
@@ -76,6 +97,57 @@
   - [ ] Grafana panel: display latest photo per plant
   - [ ] Telegram command: `/foto sucufer` → sends latest photo
 
+### Security — Phase 3
+> Reference: `docs/security.md` sections 2.1, 3.1–3.3, 4.1–4.4, 5.2–5.3, 6.1–6.5, 7.2–7.3, 9.2, 12.1–12.2, 13.1–13.2, 13.3, 13.5
+
+**Router/Network (before provisioning LXC):**
+- [ ] **Disable WPS** on the router — vulnerable to Pixie Dust attack
+- [ ] **No port forwarding for Proxmox web UI (port 8006)** to internet — access only from LAN or VPN
+- [ ] **Create IoT VLAN** (VLAN 10, 192.168.10.0/24) in pfSense/OPNsense with firewall rules:
+  - IoT → LXC: allow ports 1883 (MQTT), 8883 (MQTTS), 443 (HTTPS photos), 123/UDP (NTP)
+  - IoT → LAN: **block all**
+  - IoT → Internet: allow 443 (OTA updates only)
+- [ ] Assign static IPs to all ESP32 via DHCP static mappings (see `docs/security.md` §2.2)
+- [ ] Static IP for LXC (192.168.1.50 or equivalent)
+
+**Mosquitto:**
+- [ ] **Disable anonymous access**: `allow_anonymous false`
+- [ ] Create one MQTT user per device: `station485`, `cyd_master`, `cyd_kids`, `timercam`, `telegraf_bridge`, `telegram_bot`
+- [ ] Configure **ACL file** — each device can only publish/subscribe to its own topics (full config in `docs/security.md` §6.2)
+- [ ] Enable connection logging to `/var/log/mosquitto/mosquitto.log`
+
+**InfluxDB:**
+- [ ] Create **separate tokens with minimal permissions**: write-only for Telegraf, read-only for Grafana
+- [ ] Never use the All Access admin token in services
+
+**Grafana:**
+- [ ] **Change default admin password** immediately after install (`admin:admin` is the first thing attackers try)
+- [ ] Rename admin user, disable sign-up and anonymous access
+- [ ] Enable 2FA (TOTP) on admin account
+- [ ] Add security monitoring panel: last seen timestamp per device, reconnect counter, pump activation history
+
+**Telegram Bot:**
+- [ ] **Restrict bot to authorized `chat_id`** only — reject all other users silently
+
+**HTTP photo endpoint (TimerCam X):**
+- [ ] Require **Bearer token authentication** on `/upload` endpoint
+- [ ] Configure **nginx rate limiting**: 10 req/min per IP
+- [ ] HTTPS for the endpoint (self-signed cert from LXC CA)
+
+**Secrets management:**
+- [ ] All secrets in `/etc/sniperstation/secrets.env` — `chmod 600`, loaded via systemd `EnvironmentFile`
+- [ ] Correct file permissions on all sensitive files (see `docs/security.md` §9.2)
+
+**Monitoring:**
+- [ ] **Fail2ban** for Mosquitto (5 failed auth → 1h ban) and Grafana
+- [ ] Telegram alert when any ESP32 publishes `offline` to LWT topic
+
+**MQTTS (after basic stack is working):**
+- [ ] Generate self-signed CA + server cert (script in `docs/security.md` §8.2)
+- [ ] Configure Mosquitto on port 8883 with TLS 1.2
+- [ ] Update all ESP32 firmware with CA cert embedded (`setCACert()`)
+- [ ] Switch firewall rule from port 1883 to 8883, remove 1883
+
 ---
 
 ## Phase 4 — Field Calibration
@@ -88,6 +160,12 @@
 - [ ] Stress test: observe full irrigation cycle end-to-end
 - [ ] Validate Telegram alerts fire correctly
 
+### Security — Phase 4
+- [ ] Verify watchdog fires: simulate a hung loop and confirm the ESP32 resets
+- [ ] Verify relay max duration: send MQTT `'1'` and confirm pump stops at 60s regardless
+- [ ] Verify LWT: kill WiFi on Station-485 and confirm Telegram alert fires within 30s
+- [ ] Verify pump state recovery: cut power mid-pump, confirm relay is OFF after reboot
+
 ---
 
 ## Phase 5 — Deployment
@@ -98,6 +176,14 @@
 - [ ] Route tubing from water reservoir to planters
 - [ ] Run 72h unattended monitoring test
 - [ ] Document final calibration values in firmware config
+
+### Security — Phase 5
+> Reference: `docs/security.md` sections 1.1–1.3, 14.1–14.2
+- [ ] Confirm **Torx security screws** installed on outdoor enclosure
+- [ ] Confirm **all cable glands sealed** with silicone — no open holes
+- [ ] Confirm enclosure is in **permanent shade** — Orlando sun can exceed 60°C inside a closed box
+- [ ] Passive ventilation: 10mm holes with mesh at bottom (inlet) and top (outlet) with rain covers
+- [ ] Final security audit: verify VLAN rules, MQTTS active, all default passwords changed, `secrets.h` not in git history
 
 ---
 
@@ -114,3 +200,6 @@
 | Expand to more planters | MCP3008 ADC + extra relays |
 | Visual water level display | LED Bar Graph (10 segment) |
 | Manual control encoder | Rotary Encoder + Station-485 |
+| ESP32 flash encryption (AES-256) | — firmware change required |
+| LUKS volume encryption for InfluxDB | — Proxmox storage change |
+| MQTT topic anomaly monitoring | Custom broker plugin or bridge |
