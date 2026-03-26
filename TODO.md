@@ -2,7 +2,7 @@
 
 ## Pending Purchase
 
-- [ ] DC adapter 12V 2A, 5.5mm barrel jack (Amazon)
+- [x] ~~DC adapter 12V 2A, 5.5mm barrel jack~~ — ordered ✅
 - [x] ~~DC-DC buck converter LM2596 (x2, adjustable, built-in voltmeter)~~ — ordered ✅
 - [x] ~~Wago 221-415 lever nuts (5-port) x2~~ — ordered ✅
 - [ ] Outdoor weatherproof enclosure — IP65 minimum, with ventilation slots or fan mount (Amazon)

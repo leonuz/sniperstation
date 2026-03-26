@@ -2,7 +2,7 @@
 
 ## Pendiente Comprar
 
-- [ ] Adaptador DC 12V 2A, conector barrel 5.5mm (Amazon)
+- [x] ~~Adaptador DC 12V 2A, conector barrel 5.5mm~~ — pedido ✅
 - [ ] Caja weatherproof outdoor — IP65 mínimo, con ranuras de ventilación o soporte para fan (Amazon)
 - [ ] Cable Grove↔Dupont HY2.0-4P a 2.54mm female 20cm — WatangTech en Amazon (si no fue pedido ya)
 - [ ] Buck converter DC-DC LM2596 (ajustable, display voltímetro integrado) — para alimentar TimerCam X desde rail 12V
