@@ -4,21 +4,29 @@
 **Project:** SniperStation — Automatic succulent irrigation + weather station
 **Location:** Orlando, Florida (outdoor, exposed to sun and rain)
 
+## Status Legend
+
+| Status | Meaning |
+|---|---|
+| ✅ In hand | Physically on hand |
+| 🚚 Ordered | Purchased, in transit |
+| ⏳ Pending | Not yet purchased |
+
 ---
 
 ## Primary Components
 
 | # | Component | Model / Part | Qty | Voltage | Notes | Supplier | Status |
 |---|---|---|---|---|---|---|---|
-| 1 | Main controller | M5Stack Station-485 | 1 | 9–24V input | ESP32, WiFi, 1.14" display, 6x Grove HY2.0, RS485, RTC BM8563 | M5Stack | ✅ Have it |
-| 2 | Light sensor | DLight BH1750 | 1 | 3.3–5V | I2C address 0x23, range 1–65535 lx, Grove HY2.0 | M5Stack | ✅ Have it |
-| 3 | Temp/humidity sensor (outdoor) | SHT30 IOT-TH02 | 1 | 2.15–5.5V | I2C address 0x44, loose color-coded wires | Amazon | ✅ Purchased |
-| 4 | Temp/humidity sensor (indoor) | SHT30 IOT-TH02 | 1 | 2.15–5.5V | I2C address 0x44, loose color-coded wires | Amazon | ✅ Purchased |
-| 5 | Soil moisture sensor | M5Stack Earth Sensor | 2 | 3.3–5V | Analog + digital output, Grove HY2.0 | M5Stack | ✅ Purchased |
-| 6 | Relay module | M5Stack Mini 3A Relay | 2 | 5V control | 3A/30VDC, Grove HY2.0, NO/NC/COM | M5Stack | ✅ Purchased |
-| 7 | Peristaltic pump | DC 12–24V pump | 2 | 12V | ~100 ml/min, 80mA, reversible, tubing included | Amazon | ✅ Purchased |
-| 8 | Water level sensor | XKC-Y25-V + DFRobot driver | 1 | 5–24V | Non-contact capacitive, digital output, 4 sensitivity levels | Amazon | ✅ Purchased |
-| 9 | Indoor unit (all-in-one) | ESP32-2432S028 CYD | 2 | 5V USB | ESP32 dual-core + 2.8" TFT 240x320 color + resistive touch. One per room (master + kids). I2C SHT30 on CN1 (GPIO21/22) | Amazon | ✅ Purchased |
+| 1 | Main controller | M5Stack Station-485 | 1 | 9–24V input | ESP32, WiFi, 1.14" display, 6x Grove HY2.0, RS485, RTC BM8563 | M5Stack | ✅ In hand |
+| 2 | Light sensor | DLight BH1750 | 1 | 3.3–5V | I2C address 0x23, range 1–65535 lx, Grove HY2.0 | M5Stack | ✅ In hand |
+| 3 | Temp/humidity sensor (outdoor) | SHT30 IOT-TH02 | 1 | 2.15–5.5V | I2C address 0x44, loose color-coded wires | Amazon | 🚚 Ordered |
+| 4 | Temp/humidity sensor (indoor) | SHT30 IOT-TH02 | 1 | 2.15–5.5V | I2C address 0x44, loose color-coded wires | Amazon | 🚚 Ordered |
+| 5 | Soil moisture sensor | M5Stack Earth Sensor | 2 | 3.3–5V | Analog + digital output, Grove HY2.0 | M5Stack | 🚚 Ordered |
+| 6 | Relay module | M5Stack Mini 3A Relay | 2 | 5V control | 3A/30VDC, Grove HY2.0, NO/NC/COM | M5Stack | 🚚 Ordered |
+| 7 | Peristaltic pump | DC 12–24V pump | 2 | 12V | ~100 ml/min, 80mA, reversible, tubing included | Amazon | 🚚 Ordered |
+| 8 | Water level sensor | XKC-Y25-V + DFRobot driver | 1 | 5–24V | Non-contact capacitive, digital output, 4 sensitivity levels | Amazon | 🚚 Ordered |
+| 9 | Indoor unit (all-in-one) | ESP32-2432S028 CYD | 2 | 5V USB | ESP32 dual-core + 2.8" TFT 240x320 color + resistive touch. One per room (master + kids). I2C SHT30 on CN1 (GPIO21/22) | Amazon | 🚚 Ordered |
 | 10 | Grove↔Dupont cable | HY2.0-4P to 2.54mm female 20cm | 2 | — | Connects SHT30 to Station-485 Grove ports. WatangTech on Amazon | Amazon | 🚚 Ordered |
 | 11 | Timelapse camera | M5Stack ESP32 PSRAM Timer Camera X (OV3660) | 1 | 5V USB | 3MP 2048x1536, FOV 66.5°, WiFi, RTC BM8563, battery 140mAh, sleep 2µA. One unit covers both planters. 48x24x15mm | M5Stack | 🚚 Ordered |
 
