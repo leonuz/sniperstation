@@ -6,7 +6,7 @@
 - [x] ~~DC-DC buck converter LM2596 (x2, adjustable, built-in voltmeter)~~ — ordered ✅
 - [x] ~~Wago 221-415 lever nuts (5-port) x2~~ — ordered ✅
 - [ ] Outdoor weatherproof enclosure — IP65 minimum, with ventilation slots or fan mount (Amazon)
-- [ ] Grove↔Dupont cable HY2.0-4P to 2.54mm female 20cm — WatangTech on Amazon (if not already ordered)
+- [x] ~~Grove↔Dupont cable HY2.0-4P to 2.54mm female 20cm~~ — ordered ✅
 - [x] ~~OLED SSH1106 1.3" I2C 128x64~~ — replaced by CYD ESP32-2432S028 (all-in-one)
 
 ## TimerCam X — Pending

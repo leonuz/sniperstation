@@ -4,8 +4,8 @@
 
 - [x] ~~Adaptador DC 12V 2A, conector barrel 5.5mm~~ — pedido ✅
 - [ ] Caja weatherproof outdoor — IP65 mínimo, con ranuras de ventilación o soporte para fan (Amazon)
-- [ ] Cable Grove↔Dupont HY2.0-4P a 2.54mm female 20cm — WatangTech en Amazon (si no fue pedido ya)
-- [ ] Buck converter DC-DC LM2596 (ajustable, display voltímetro integrado) — para alimentar TimerCam X desde rail 12V
+- [x] ~~Cable Grove↔Dupont HY2.0-4P a 2.54mm female 20cm~~ — pedido ✅
+- [x] ~~Buck converter DC-DC LM2596 (ajustable, display voltímetro integrado)~~ — pedido ✅
 - [x] ~~OLED SSH1106 1.3" I2C 128x64~~ — reemplazado por CYD ESP32-2432S028 (todo en uno)
 - [x] ~~Wago 221-415 lever nuts (5-port) x2~~ — pedidos ✅
 - [x] ~~M5Stack ESP32 PSRAM Timer Camera X (OV3660)~~ — pedida ✅
