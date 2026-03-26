@@ -2,8 +2,8 @@
 
 Sistema automático de riego y estación meteorológica para dos materos de suculentas ubicados en exterior, Orlando, Florida.
 
-**SucuFer** — Suculenta de Fernanda, sembrada el 22 de abril de 2024 (10 años)
-**SucuRod** — Suculenta de Rodrigo, sembrada el 22 de abril de 2024 (6 años)
+**SucuFer** — Suculenta de Fernanda, sembrada el 22 de abril de 2024
+**SucuRod** — Suculenta de Rodrigo, sembrada el 22 de abril de 2024
 
 Monitorea condiciones ambientales (temperatura, humedad, luz solar, humedad del suelo) y riega automáticamente según los sensores. Incluye pantalla táctil a color (CYD), dashboard web (Grafana), alertas por Telegram e historial completo de datos.
 
@@ -37,8 +37,8 @@ Station-485 (controlador principal)         CYD ESP32-2432S028 x2
 
 | Planta | Dueño | Edad | Sembrada |
 |---|---|---|---|
-| SucuFer | Fernanda (10 años) | ~2 años | 22 de abril, 2024 |
-| SucuRod | Rodrigo (6 años) | ~2 años | 22 de abril, 2024 |
+| SucuFer | Fernanda | ~2 años | 22 de abril, 2024 |
+| SucuRod | Rodrigo | ~2 años | 22 de abril, 2024 |
 
 La vista de detalle del CYD para cada planta muestra la foto del dueño con su suculenta como fondo, junto con la fecha de siembra y la humedad actual del suelo.
 

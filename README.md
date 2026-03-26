@@ -2,8 +2,8 @@
 
 Automatic irrigation system and weather station for two succulent planters located outdoors in Orlando, Florida.
 
-**SucuFer** — Fernanda's succulent, planted April 22, 2024 (age 10)
-**SucuRod** — Rodrigo's succulent, planted April 22, 2024 (age 6)
+**SucuFer** — Fernanda's succulent, planted April 22, 2024
+**SucuRod** — Rodrigo's succulent, planted April 22, 2024
 
 Monitors environmental conditions (temperature, humidity, light, soil moisture) and waters automatically based on sensor readings. Provides a color touchscreen dashboard (CYD), web dashboard (Grafana), Telegram push alerts, and full historical data logging.
 
@@ -37,8 +37,8 @@ Station-485 (main controller)               CYD ESP32-2432S028 x2
 
 | Plant | Owner | Age | Planted |
 |---|---|---|---|
-| SucuFer | Fernanda (age 10) | ~2 years | April 22, 2024 |
-| SucuRod | Rodrigo (age 6) | ~2 years | April 22, 2024 |
+| SucuFer | Fernanda | ~2 years | April 22, 2024 |
+| SucuRod | Rodrigo | ~2 years | April 22, 2024 |
 
 The CYD touchscreen detail view for each plant displays the owner's photo with their succulent as the background, along with planting date and current soil moisture.
 
