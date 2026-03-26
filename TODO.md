@@ -179,6 +179,15 @@
 
 ---
 
+## Simulation & Testing
+
+- [ ] **Wokwi** — simulate Station-485 firmware (ESP32 + BH1750 + SHT30 + relays + MQTT) before hardware arrives
+  - [ ] Convert `hardware/schematics/station485_wiring.md` to Wokwi diagram JSON
+  - [ ] Simulate irrigation logic with mocked sensor values
+  - [ ] Validate MQTT publish/subscribe flow against local broker
+
+---
+
 ## Decisions Pending
 
 - [ ] Define cooldown logic: minimum time between irrigation cycles
