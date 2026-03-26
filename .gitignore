@@ -30,5 +30,8 @@ desktop.ini
 *.swo
 *~
 
+# Photos (private)
+assets/photos/
+
 # Claude local settings
 .claude/settings.local.json
