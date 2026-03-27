@@ -39,9 +39,9 @@ AUTHORIZED_CHAT_ID = int(os.environ["TELEGRAM_CHAT_ID"])
 STRINGS = {
     "start": [
         "🌵 SniperStation online.\n\n"
-        "/estado — system status\n"
-        "/riego <plant> — trigger irrigation (sucufer | sucurod)\n"
-        "/foto <plant> — latest photo (sucufer | sucurod)\n"
+        "/status — system status\n"
+        "/water <plant> — trigger irrigation (sucufer | sucurod)\n"
+        "/photo <plant> — latest photo (sucufer | sucurod)\n"
         "/lang [en|es] — switch language\n\n"
         "Or just ask me anything about the plants.",
 
