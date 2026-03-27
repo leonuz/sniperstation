@@ -287,7 +287,11 @@ async def cmd_foto(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def _update_command_menu(bot, lang: str) -> None:
     """Push the correct command list to Telegram for the given language."""
-    await bot.set_my_commands(BOT_COMMANDS[lang])
+    try:
+        await bot.set_my_commands(BOT_COMMANDS[lang])
+        logger.info("Command menu updated to lang=%s", lang)
+    except Exception as e:
+        logger.error("Failed to update command menu: %s", e)
 
 
 async def cmd_lang(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -339,8 +343,12 @@ async def _scheduled_monthly(context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def _post_init(app) -> None:
     """Sync Telegram command menu to the persisted language on startup."""
-    lang = list(_LANG_MAP.keys())[_get_lang()]
-    await _update_command_menu(app.bot, lang)
+    try:
+        lang = list(_LANG_MAP.keys())[_get_lang()]
+        logger.info("post_init: setting command menu for lang=%s", lang)
+        await _update_command_menu(app.bot, lang)
+    except Exception as e:
+        logger.error("post_init failed: %s", e)
 
 
 def main() -> None:
