@@ -3,9 +3,10 @@ SniperStation Telegram Bot.
 
 Features:
 - Natural language queries via LLM agent (Claude or Ollama)
-- Commands: /start, /estado, /riego, /foto
+- Commands: /start, /estado, /riego, /foto, /lang
 - MQTT LWT alert forwarding (device offline notifications)
 - Scheduled email reports: daily x3, weekly x1, monthly x1
+- Bilingual EN/ES, switchable at runtime via /lang and persisted to disk
 """
 
 import asyncio
@@ -40,13 +41,15 @@ STRINGS = {
         "🌵 SniperStation online.\n\n"
         "/estado — system status\n"
         "/riego <plant> — trigger irrigation (sucufer | sucurod)\n"
-        "/foto <plant> — latest photo (sucufer | sucurod)\n\n"
+        "/foto <plant> — latest photo (sucufer | sucurod)\n"
+        "/lang [en|es] — switch language\n\n"
         "Or just ask me anything about the plants.",
 
         "🌵 SniperStation en línea.\n\n"
         "/estado — estado del sistema\n"
         "/riego <planta> — riego manual (sucufer | sucurod)\n"
-        "/foto <planta> — última foto (sucufer | sucurod)\n\n"
+        "/foto <planta> — última foto (sucufer | sucurod)\n"
+        "/lang [en|es] — cambiar idioma\n\n"
         "O pregúntame lo que quieras sobre las plantas.",
     ],
     "checking": ["Checking sensors…", "Consultando sensores…"],
@@ -69,19 +72,42 @@ STRINGS = {
     "report_daily_error": ["⚠️ Error sending daily email report.", "⚠️ Error enviando reporte diario por email."],
     "report_weekly_error": ["⚠️ Error sending weekly email report.", "⚠️ Error enviando reporte semanal por email."],
     "report_monthly_error": ["⚠️ Error sending monthly email report.", "⚠️ Error enviando reporte mensual por email."],
+    "lang_current": ["Current language: *English* 🇺🇸\nUse /lang es to switch.", "Idioma actual: *Español* 🇻🇪\nUsa /lang en para cambiar."],
+    "lang_set_en": ["Language set to *English* 🇺🇸", "Idioma cambiado a *English* 🇺🇸"],
+    "lang_set_es": ["Idioma configurado a *Español* 🇻🇪", "Idioma configurado a *Español* 🇻🇪"],
+    "lang_usage": ["Usage: /lang en | /lang es", "Uso: /lang en | /lang es"],
 }
 
-# Default language index: 0=EN, 1=ES
-_LANG = int(os.environ.get("BOT_LANG", "1"))
+_LANG_FILE = "/etc/sniperstation/bot_lang"
+_LANG_MAP = {"en": 0, "es": 1}
 
 _llm = None
 # Reference to the running application, shared with the MQTT thread
 _app = None
 
 
+def _load_lang() -> int:
+    """Load persisted language index from disk, defaulting to ES."""
+    try:
+        with open(_LANG_FILE) as f:
+            return _LANG_MAP.get(f.read().strip(), 1)
+    except FileNotFoundError:
+        return 1
+
+
+def _save_lang(lang: str) -> None:
+    """Persist language selection to disk."""
+    with open(_LANG_FILE, "w") as f:
+        f.write(lang)
+
+
+def _get_lang() -> int:
+    return _load_lang()
+
+
 def t(key: str, **kwargs) -> str:
     """Return the UI string for the current language, with optional format args."""
-    s = STRINGS[key][_LANG]
+    s = STRINGS[key][_get_lang()]
     return s.format(**kwargs) if kwargs else s
 
 
@@ -241,6 +267,22 @@ async def cmd_foto(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_text(t("foto_error", e=e))
 
 
+async def cmd_lang(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if not _is_authorized(update):
+        return
+    args = context.args
+    if not args:
+        await update.message.reply_text(t("lang_current"), parse_mode="Markdown")
+        return
+    lang = args[0].lower()
+    if lang not in _LANG_MAP:
+        await update.message.reply_text(t("lang_usage"))
+        return
+    _save_lang(lang)
+    key = "lang_set_en" if lang == "en" else "lang_set_es"
+    await update.message.reply_text(STRINGS[key][_LANG_MAP[lang]], parse_mode="Markdown")
+
+
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Route free-text messages to the LLM agent."""
     if not _is_authorized(update):
@@ -281,6 +323,7 @@ def main() -> None:
     _app.add_handler(CommandHandler("estado", cmd_estado))
     _app.add_handler(CommandHandler("riego", cmd_riego))
     _app.add_handler(CommandHandler("foto", cmd_foto))
+    _app.add_handler(CommandHandler("lang", cmd_lang))
     _app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     # Daily reports at 07:00, 13:00, 19:00 America/New_York (UTC-4 in EDT)
