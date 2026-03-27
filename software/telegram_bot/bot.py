@@ -15,7 +15,7 @@ import os
 from datetime import time as dtime
 
 import paho.mqtt.client as mqtt
-from telegram import Update
+from telegram import BotCommand, Update
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -76,6 +76,24 @@ STRINGS = {
     "lang_set_en": ["Language set to *English* 🇺🇸", "Idioma cambiado a *English* 🇺🇸"],
     "lang_set_es": ["Idioma configurado a *Español* 🇻🇪", "Idioma configurado a *Español* 🇻🇪"],
     "lang_usage": ["Usage: /lang en | /lang es", "Uso: /lang en | /lang es"],
+}
+
+# Bot command menu definitions per language
+BOT_COMMANDS = {
+    "en": [
+        BotCommand("start", "Show help"),
+        BotCommand("status", "System status"),
+        BotCommand("water", "Trigger irrigation (sucufer | sucurod)"),
+        BotCommand("photo", "Latest photo (sucufer | sucurod)"),
+        BotCommand("lang", "Switch language (en | es)"),
+    ],
+    "es": [
+        BotCommand("start", "Mostrar ayuda"),
+        BotCommand("estado", "Estado del sistema"),
+        BotCommand("riego", "Riego manual (sucufer | sucurod)"),
+        BotCommand("foto", "Última foto (sucufer | sucurod)"),
+        BotCommand("lang", "Cambiar idioma (en | es)"),
+    ],
 }
 
 _LANG_FILE = "/etc/sniperstation/bot_lang"
@@ -267,6 +285,11 @@ async def cmd_foto(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_text(t("foto_error", e=e))
 
 
+async def _update_command_menu(bot, lang: str) -> None:
+    """Push the correct command list to Telegram for the given language."""
+    await bot.set_my_commands(BOT_COMMANDS[lang])
+
+
 async def cmd_lang(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not _is_authorized(update):
         return
@@ -279,6 +302,7 @@ async def cmd_lang(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_text(t("lang_usage"))
         return
     _save_lang(lang)
+    await _update_command_menu(context.bot, lang)
     key = "lang_set_en" if lang == "en" else "lang_set_es"
     await update.message.reply_text(STRINGS[key][_LANG_MAP[lang]], parse_mode="Markdown")
 
@@ -313,16 +337,28 @@ async def _scheduled_monthly(context: ContextTypes.DEFAULT_TYPE) -> None:
         await context.bot.send_message(chat_id=AUTHORIZED_CHAT_ID, text=t("report_monthly_error"))
 
 
+async def _post_init(app) -> None:
+    """Sync Telegram command menu to the persisted language on startup."""
+    lang = list(_LANG_MAP.keys())[_get_lang()]
+    await _update_command_menu(app.bot, lang)
+
+
 def main() -> None:
     global _app
 
     token = os.environ["TELEGRAM_BOT_TOKEN"]
-    _app = ApplicationBuilder().token(token).build()
+    _app = ApplicationBuilder().token(token).post_init(_post_init).build()
 
+    # Spanish commands
     _app.add_handler(CommandHandler("start", cmd_start))
     _app.add_handler(CommandHandler("estado", cmd_estado))
     _app.add_handler(CommandHandler("riego", cmd_riego))
     _app.add_handler(CommandHandler("foto", cmd_foto))
+    # English command aliases — same handlers
+    _app.add_handler(CommandHandler("status", cmd_estado))
+    _app.add_handler(CommandHandler("water", cmd_riego))
+    _app.add_handler(CommandHandler("photo", cmd_foto))
+    # Language switcher (shared)
     _app.add_handler(CommandHandler("lang", cmd_lang))
     _app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
