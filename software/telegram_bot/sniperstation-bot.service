@@ -1,0 +1,18 @@
+[Unit]
+Description=SniperStation Telegram Bot
+After=network.target mosquitto.service influxdb.service
+Wants=mosquitto.service influxdb.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/sniperstation/telegram_bot
+EnvironmentFile=/etc/sniperstation/secrets.env
+ExecStart=/opt/sniperstation/telegram_bot/venv/bin/python bot.py
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
