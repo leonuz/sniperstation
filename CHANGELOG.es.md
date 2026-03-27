@@ -14,6 +14,36 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Stack de software Proxmox LXC incluyendo endpoint para fotos + panel Grafana (Fase 3)
 - Rediseño + impresión carcasa interior para el CYD (Fase 1)
 
+## [0.6.0] — 2026-03-27
+
+### Agregado
+- LXC `snipermqtt.uzc` aprovisionado (VMID 112, Debian 12, 192.168.0.79) en Proxmox
+- Mosquitto 2.0.11 — auth activado (`allow_anonymous false`), un usuario por dispositivo, ACL por topic
+- InfluxDB 2.8 — org `sniperstation`, bucket `sniperstation`, token escritura (Telegraf) + token lectura (Grafana)
+- Telegraf 1.38 — bridge MQTT → InfluxDB como suscriptor
+- Grafana 12.4.2 — datasource InfluxDB configurado, contraseña admin cambiada, registro deshabilitado
+- nginx — proxy inverso HTTPS para Grafana + endpoint `/upload` para fotos TimerCam, TLS via pfSense CA
+- Bot de Telegram (`software/telegram_bot/`) — desplegado como servicio systemd en snipermqtt LXC
+  - Consultas en lenguaje natural via agente LLM (Claude o Ollama, seleccionable via `LLM_BACKEND`)
+  - Comandos: `/start`, `/estado`/`/status`, `/riego`/`/water`, `/foto`/`/photo`, `/lang`
+  - Suscriptor MQTT LWT — alerta por Telegram cuando un dispositivo se desconecta
+  - Reportes por email via Resend: diario x3, semanal x1, mensual x1
+  - Bilingüe EN/ES — cambiable en tiempo real con `/lang en|es`, persiste en disco
+  - Menú de comandos Telegram se actualiza dinámicamente al cambiar idioma
+- `software/telegram_bot/agent.py` — loop agéntico multi-LLM (Claude Haiku / Ollama)
+- `software/telegram_bot/tools.py` — herramientas de consulta InfluxDB para todos los sensores
+- `software/telegram_bot/reports.py` — generación de reportes por email via Resend
+- `software/telegram_bot/sniperstation-bot.service` — unidad systemd con secretos via EnvironmentFile
+- Hook global en Claude Code: verificación de calidad en archivos Python antes de escribir (sin imports muertos, sin toy code, strings EN/ES, comentarios en inglés)
+
+### Infraestructura
+- Secretos almacenados en `/etc/sniperstation/secrets.env` (chmod 600) en la LXC
+- Certificados TLS de la CA interna de pfSense desplegados en `/etc/sniperstation/certs/`
+- Nesting habilitado en LXC (`features: nesting=1`) para soporte de namespaces de Grafana
+- Directorios de fotos creados: `/var/sniperstation/photos/sucufer/` y `sucurod/`
+
+---
+
 ## [0.5.0] — 2026-03-26
 
 ### Cambiado

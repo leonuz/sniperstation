@@ -14,6 +14,36 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Proxmox LXC software stack including photo storage endpoint + Grafana panel (Phase 3)
 - Redesign + print indoor enclosure for CYD form factor (Phase 1)
 
+## [0.6.0] — 2026-03-27
+
+### Added
+- Provisioned `snipermqtt.uzc` LXC (VMID 112, Debian 12, 192.168.0.79) on Proxmox
+- Mosquitto 2.0.11 — auth enabled (`allow_anonymous false`), one user per device, ACL file per topic
+- InfluxDB 2.8 — org `sniperstation`, bucket `sniperstation`, write-only token (Telegraf) + read-only token (Grafana)
+- Telegraf 1.38 — MQTT subscriber bridge → InfluxDB
+- Grafana 12.4.2 — InfluxDB datasource configured, admin password changed, sign-up disabled
+- nginx — HTTPS reverse proxy for Grafana + `/upload` endpoint for TimerCam photos, TLS via pfSense CA
+- Telegram bot (`software/telegram_bot/`) — deployed as systemd service on snipermqtt LXC
+  - Natural language queries via LLM agent (Claude or Ollama, selectable via `LLM_BACKEND`)
+  - Commands: `/start`, `/estado`/`/status`, `/riego`/`/water`, `/foto`/`/photo`, `/lang`
+  - MQTT LWT subscriber — sends Telegram alert when any device goes offline
+  - Scheduled email reports via Resend: daily x3, weekly x1, monthly x1
+  - Bilingual EN/ES — switchable at runtime via `/lang en|es`, persisted to disk
+  - Dynamic Telegram command menu updates on language switch
+- `software/telegram_bot/agent.py` — multi-LLM agentic loop (Claude Haiku / Ollama)
+- `software/telegram_bot/tools.py` — InfluxDB query tools for all sensor data
+- `software/telegram_bot/reports.py` — email report generation via Resend
+- `software/telegram_bot/sniperstation-bot.service` — systemd unit with secrets via EnvironmentFile
+- Global Claude Code hook: pre-write Python file quality checks (no unused imports, no toy code, EN/ES strings, English comments)
+
+### Infrastructure
+- All secrets stored in `/etc/sniperstation/secrets.env` (chmod 600) on snipermqtt LXC
+- TLS certificates from pfSense internal CA deployed to `/etc/sniperstation/certs/`
+- LXC nesting enabled (`features: nesting=1`) to support Grafana systemd namespace requirements
+- Photo storage directories: `/var/sniperstation/photos/sucufer/` and `sucurod/`
+
+---
+
 ## [0.5.0] — 2026-03-26
 
 ### Changed

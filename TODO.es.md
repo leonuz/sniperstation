@@ -52,14 +52,24 @@
 - [ ] Firmware Station-485 (ver ROADMAP Fase 2)
 - [ ] Firmware CYD indoor (ver ROADMAP Fase 2)
 
-## Fase 3 — Software (no iniciado)
+## Fase 3 — Software (en progreso)
 
-- [ ] Provisionar LXC en Proxmox
-- [ ] Mosquitto + InfluxDB + Grafana + Bot Telegram (ver ROADMAP Fase 3)
+- [x] ~~Provisionar LXC en Proxmox~~ — snipermqtt.uzc 192.168.0.79 ✅
+- [x] ~~Mosquitto 2.0.11~~ — auth + ACL, un usuario por dispositivo ✅
+- [x] ~~InfluxDB 2.8~~ — org+bucket `sniperstation`, tokens escritura/lectura ✅
+- [x] ~~Telegraf 1.38~~ — bridge MQTT → InfluxDB ✅
+- [x] ~~Grafana 12.4.2~~ — datasource configurado, HTTPS via nginx + pfSense CA ✅
+- [x] ~~Bot Telegram~~ — agente NL (Claude/Ollama), comandos, alertas LWT, reportes email, EN/ES ✅
+- [ ] Dashboard Grafana — 7 paneles (esperando datos reales del ESP32)
+- [ ] Endpoint HTTP para fotos TimerCam X
+- [ ] Almacenamiento fotos: `photos/sucufer/YYYY-MM-DD_HH.jpg`
+- [ ] Panel Grafana: última foto por planta
+- [ ] 2FA (TOTP) en cuenta admin Grafana
+- [ ] fail2ban para Mosquitto y Grafana
 
 ## Decisiones Pendientes
 
 - [ ] Definir lógica de cooldown: tiempo mínimo entre ciclos de riego para evitar re-regar muy pronto
-- [ ] Elegir librería bot Telegram (python-telegram-bot vs pyTelegramBotAPI)
+- [x] ~~Elegir librería bot Telegram~~ — python-telegram-bot 22.7 ✅
 - [ ] Definir diseño del logo bitmap + layout UI para pantalla TFT CYD (screensaver + vista principal + vista detalle)
 - [ ] Fotos actualizadas de Fernanda y Rodrigo con sus suculentas (las actuales del día de siembra serán reemplazadas)

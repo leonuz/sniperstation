@@ -71,12 +71,13 @@
 ## Phase 3 — Software Stack
 
 ### Software Tasks
-- [ ] Provision LXC container (Debian 12) on Proxmox
-- [ ] Install and configure Mosquitto broker
-- [ ] Install and configure InfluxDB 2.x (org, bucket, tokens)
-- [ ] MQTT → InfluxDB bridge (Telegraf or Python)
-- [ ] Install and configure Grafana (dashboard, datasource)
-- [ ] Telegram bot (BotFather, alerts, manual irrigation command)
+- [x] ~~Provision LXC container (Debian 12) on Proxmox~~ — snipermqtt.uzc 192.168.0.79 ✅
+- [x] ~~Install and configure Mosquitto broker~~ — auth + ACL, port 1883 ✅
+- [x] ~~Install and configure InfluxDB 2.x (org, bucket, tokens)~~ — org+bucket `sniperstation`, write/read tokens ✅
+- [x] ~~MQTT → InfluxDB bridge (Telegraf or Python)~~ — Telegraf 1.38 ✅
+- [x] ~~Install and configure Grafana (dashboard, datasource)~~ — datasource configured, awaiting real data for dashboard ✅
+- [x] ~~Telegram bot (BotFather, alerts, manual irrigation command)~~ — deployed with NL agent, LWT alerts, /lang EN/ES ✅
+- [ ] Grafana dashboard — 7 panels (waiting for ESP32 data)
 - [ ] HTTP endpoint for TimerCam X photo upload
 - [ ] Photo storage: `photos/sucufer/YYYY-MM-DD_HH.jpg`
 - [ ] Grafana panel: latest photo per plant
@@ -91,38 +92,38 @@
 - [ ] Static IP for LXC
 
 **Mosquitto:**
-- [ ] `allow_anonymous false` in `mosquitto.conf`
-- [ ] Create one user per device (6 users — see `docs/security.md` §6.1)
-- [ ] Configure ACL file (see `docs/security.md` §6.2 for full config)
-- [ ] Enable connection logging
+- [x] ~~`allow_anonymous false` in `mosquitto.conf`~~ ✅
+- [x] ~~Create one user per device (6 users)~~ ✅
+- [x] ~~Configure ACL file~~ ✅
+- [x] ~~Enable connection logging~~ ✅
 
 **InfluxDB:**
-- [ ] Create write-only token for Telegraf
-- [ ] Create read-only token for Grafana
-- [ ] Never use All Access token in services
+- [x] ~~Create write-only token for Telegraf~~ ✅
+- [x] ~~Create read-only token for Grafana~~ ✅
+- [x] ~~Never use All Access token in services~~ ✅
 
 **Grafana:**
-- [ ] Change default `admin:admin` password immediately after install
-- [ ] Rename admin user, disable sign-up and anonymous access
+- [x] ~~Change default `admin:admin` password immediately after install~~ ✅
+- [x] ~~Disable sign-up and anonymous access~~ ✅
 - [ ] Enable 2FA (TOTP) on admin account
 - [ ] Add security monitoring panel (device last seen, pump activations)
 
 **Telegram Bot:**
-- [ ] Restrict bot to authorized `chat_id` only
+- [x] ~~Restrict bot to authorized `chat_id` only~~ ✅
 
 **HTTP photo endpoint:**
 - [ ] Bearer token authentication on `/upload`
-- [ ] nginx rate limiting: 10 req/min per IP
-- [ ] HTTPS with self-signed cert
+- [x] ~~nginx rate limiting: 10 req/min per IP~~ ✅
+- [x] ~~HTTPS with pfSense CA cert~~ ✅
 
 **Secrets & permissions:**
-- [ ] All secrets in `/etc/sniperstation/secrets.env` with `chmod 600`
-- [ ] Load secrets via systemd `EnvironmentFile`
-- [ ] `chmod 600` on Mosquitto passwd and ACL files
+- [x] ~~All secrets in `/etc/sniperstation/secrets.env` with `chmod 600`~~ ✅
+- [x] ~~Load secrets via systemd `EnvironmentFile`~~ ✅
+- [x] ~~`chmod 600` on Mosquitto passwd and ACL files~~ ✅
 
 **Monitoring:**
 - [ ] Install and configure `fail2ban` for Mosquitto and Grafana
-- [ ] Telegram alert on LWT `offline` message from any device
+- [x] ~~Telegram alert on LWT `offline` message from any device~~ ✅
 
 **MQTTS (after stack is working):**
 - [ ] Generate CA + server cert (script in `docs/security.md` §8.2)
