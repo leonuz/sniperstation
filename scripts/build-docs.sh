@@ -24,6 +24,6 @@ DISABLE_MKDOCS_2_WARNING=true "$VENV/bin/mkdocs" build -f "$REPO/mkdocs.yml" -d 
 
 # Deploy (clean target, then extract)
 ssh root@"$HOST" "mkdir -p /var/www/sniperdocs/$TARGET"
-tar -C "$OUT" -cf - . | ssh root@"$HOST" "rm -rf /var/www/sniperdocs/$TARGET/* && tar -C /var/www/sniperdocs/$TARGET -xf -"
+tar -C "$OUT" -cf - . | ssh root@"$HOST" "rm -rf /var/www/sniperdocs/$TARGET/* && tar -C /var/www/sniperdocs/$TARGET -xf - && chmod 755 /var/www/sniperdocs/$TARGET && chmod -R a+rX /var/www/sniperdocs/$TARGET"
 rm -rf "$OUT"
 echo "Deployed -> $SITE_URL"
