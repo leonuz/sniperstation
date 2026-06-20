@@ -33,5 +33,10 @@ desktop.ini
 # Photos (private)
 assets/photos/
 
+# Secrets / credentials
+.iot
+secrets.h
+secrets.env
+
 # Claude local settings
 .claude/settings.local.json
