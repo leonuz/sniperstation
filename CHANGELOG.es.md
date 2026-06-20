@@ -7,6 +7,12 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Sin publicar]
 
+### Agregado
+- Sitio de docs publicado (MkDocs Material) en `https://snipermqtt.uzc/station/` detrás de nginx con auth básica; `mkdocs.yml` + `scripts/gen_mkdocs.py` (generador de nav EN/ES) + `scripts/build-docs.sh` (build y deploy)
+
+### Seguridad
+- `.gitignore` ahora excluye `.iot`, `secrets.h`, `secrets.env` — evita commitear credenciales WiFi/MQTT
+
 ### Planificado
 - Firmware Station-485 (Fase 2)
 - Firmware CYD ESP32-2432S028 interior x2 (Fase 2)

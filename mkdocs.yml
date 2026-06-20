@@ -1,0 +1,118 @@
+site_name: SniperStation Docs
+site_url: https://snipermqtt.uzc/station/
+docs_dir: .
+use_directory_urls: true
+nav:
+- English:
+  - Home: README.md
+  - Roadmap: ROADMAP.md
+  - TODO: TODO.md
+  - Changelog: CHANGELOG.md
+  - Project Overview: sniperstation_project.md
+  - Docs:
+    - Security: docs/security.md
+    - Broker Deployment: docs/snipermqtt-deployment.md
+  - Hardware:
+    - BOM: hardware/BOM.md
+    - ESP8266 Interior: hardware/schematics/esp8266_interior.md
+    - Indoor Enclosure: hardware/enclosure/indoor_unit_design.md
+    - Outdoor Power: hardware/schematics/outdoor_power.md
+    - Requirements: hardware/enclosure/requirements.md
+    - Datasheet Sources: hardware/datasheets/SOURCES.md
+    - Station-485 Wiring: hardware/schematics/station485_wiring.md
+    - System Overview: hardware/schematics/system_overview.md
+- Español:
+  - Home: README.es.md
+  - Roadmap: ROADMAP.es.md
+  - TODO: TODO.es.md
+  - Changelog: CHANGELOG.es.md
+  - Project Overview: sniperstation_project.es.md
+  - Docs:
+    - Security: docs/security.es.md
+    - Broker Deployment: docs/snipermqtt-deployment.es.md
+  - Hardware:
+    - BOM: hardware/BOM.es.md
+    - ESP8266 Interior: hardware/schematics/esp8266_interior.es.md
+    - Indoor Enclosure: hardware/enclosure/indoor_unit_design.es.md
+    - Outdoor Power: hardware/schematics/outdoor_power.es.md
+    - Requirements: hardware/enclosure/requirements.es.md
+    - Datasheet Sources: hardware/datasheets/SOURCES.es.md
+    - Station-485 Wiring: hardware/schematics/station485_wiring.es.md
+    - System Overview: hardware/schematics/system_overview.es.md
+plugins:
+- same-dir
+- search
+theme:
+  name: material
+  language: en
+  features:
+  - navigation.sections
+  - navigation.top
+  - navigation.footer
+  - content.code.copy
+  - search.suggest
+  palette:
+  - media: '(prefers-color-scheme: light)'
+    scheme: default
+    primary: teal
+    toggle:
+      icon: material/weather-night
+      name: Switch to dark mode
+  - media: '(prefers-color-scheme: dark)'
+    scheme: slate
+    primary: teal
+    toggle:
+      icon: material/weather-sunny
+      name: Switch to light mode
+markdown_extensions:
+- admonition
+- tables
+- toc
+- attr_list
+- md_in_html
+- pymdownx.highlight:
+    anchor_linenums: true
+- pymdownx.superfences
+- pymdownx.details
+exclude_docs: 'firmware/
+
+  proxmox/
+
+  software/
+
+  scripts/
+
+  assets/photos/
+
+  venv/
+
+  *.py
+
+  *.ino
+
+  *.json
+
+  *.yaml
+
+  *.yml
+
+  *.service
+
+  *.env*
+
+  *.h
+
+  *.example
+
+  *.mmd
+
+  *.sh
+
+  '
+validation:
+  nav:
+    omitted_files: ignore
+    not_found: warn
+  links:
+    not_found: warn
+    absolute_links: ignore
