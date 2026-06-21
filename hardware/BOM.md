@@ -1,6 +1,6 @@
 # Bill of Materials — SniperStation
 
-**Last updated:** 2026-04-07
+**Last updated:** 2026-06-21
 **Project:** SniperStation — Automatic succulent irrigation + weather station
 **Location:** Orlando, Florida (outdoor, exposed to sun and rain)
 
@@ -9,8 +9,8 @@
 | Status | Meaning |
 |---|---|
 | ✅ In hand | Physically on hand |
-| ✅ In hand | Purchased, in transit |
-| ✅ In hand | Not yet purchased |
+| 🚚 In transit | Purchased, in transit |
+| 🛒 To buy | Not yet purchased |
 
 ---
 

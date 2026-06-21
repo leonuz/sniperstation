@@ -1,6 +1,6 @@
 # Lista de Materiales — SniperStation
 
-**Última actualización:** 2026-04-07
+**Última actualización:** 2026-06-21
 **Proyecto:** SniperStation — Riego automático de suculentas + estación meteorológica
 **Ubicación:** Orlando, Florida (exterior, expuesto al sol y lluvia)
 
@@ -9,8 +9,8 @@
 | Estado | Significado |
 |---|---|
 | ✅ En mano | Físicamente disponible |
-| ✅ En mano | Comprado, en tránsito |
-| ✅ En mano | Aún no comprado |
+| 🚚 En tránsito | Comprado, en tránsito |
+| 🛒 Por comprar | Aún no comprado |
 
 ---
 
